@@ -135,14 +135,17 @@ public final class QueryUtils {
      * Return a list of {@link News} objects that has been built up from
      * parsing the given JSON response.
      */
-    private static List<News> extractFeatureFromJson(String bookJSON) {
+    private static List<News> extractFeatureFromJson(String newsJSON) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(bookJSON)) {
+        if (TextUtils.isEmpty(newsJSON)) {
             return null;
         }
 
         // Create an empty ArrayList that we can start adding news to
         List<News> news = new ArrayList<>();
+
+
+
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -150,49 +153,28 @@ public final class QueryUtils {
         try {
 
             // Create a JSONObject from the JSON response string
-            JSONObject baseJsonResponse = new JSONObject(bookJSON);
-
-            // Extract the JSONArray associated with the key called "items",
+            JSONObject baseJsonResponse = new JSONObject(newsJSON);
+            // Extract the JSONArray associated with the key called "response",
             // which represents a list of features (or news).
-            JSONArray bookArray = baseJsonResponse.getJSONArray("items");
+            JSONObject responseObject = baseJsonResponse.getJSONObject("response");
+
+            JSONArray newsArray = responseObject.getJSONArray("results");
+
 
             // For each book in the bookArray, create an {@link News} object
-            for (int i = 0; i < bookArray.length(); i++) {
 
-                // Get a single news at position i within the list of news
-                JSONObject currentBook = bookArray.getJSONObject(i);
+            for (int i = 0; i < newsArray.length(); i++) {
 
-                // For a given news, extract the JSONObject associated with the
-                // key called "properties", which represents a list of all properties
-                // for that news.
-                JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
-                Log.i("Title from volumeInfo", volumeInfo.getString("title"));
-                Log.i("Date from volumeInfo", volumeInfo.getString("publishedDate"));
+                JSONObject currentNews = newsArray.getJSONObject(i);
 
-                // Set Author to missing author. This will be loaded in case there is no author available
-                String author = "No author";
-                try {
-                    JSONArray authors = volumeInfo.getJSONArray("authors");
-                    author = authors.getString(0);
-                    Log.i("Author: ", author);
-                } catch (JSONException e) {
-                    Log.e("JSON Exception", "No author available for this news", e);
-                }
-
-                Log.i("InfoLink da volumeInfo", volumeInfo.getString("infoLink"));
-
-                // Extract the value for the key called "title"
-                String title = volumeInfo.getString("title");
-
-                // Extract the value for the key called "date"
-                String date = volumeInfo.getString("publishedDate");
-
-                // Extract the value for the key called "url"
-                String url = volumeInfo.getString("infoLink");
+                Log.i("Title: ", currentNews.getString("webTitle"));
+                Log.i("Section: ", currentNews.getString("sectionName"));
+                Log.i("Date: ", currentNews.getString("webPublicationDate"));
+                Log.i("Url: ", currentNews.getString("webUrl"));
 
                 // Create a new {@link News} object with the thumbnail, location, time,
                 // and url from the JSON response.
-                News retrievedNews = new News(title, author, date, url);
+                News retrievedNews = new News(currentNews.getString("webTitle"), currentNews.getString("sectionName"), currentNews.getString("webPublicationDate"), currentNews.getString("webUrl"));
 
                 // Add the new {@link News} to the list of news.
                 news.add(retrievedNews);
@@ -202,7 +184,7 @@ public final class QueryUtils {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the Google Books API JSON results", e);
+            Log.e("QueryUtils", "Problem parsing The Guardian API JSON results", e);
         }
 
         // Return the list of news

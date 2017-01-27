@@ -2,7 +2,7 @@ package com.example.android.news;
 
 /**
  * {@link News} represents a single news.
- * Each object has 3 properties: thumbnail, city and date.
+ * Each object has properties: title, author, section, date
  */
 public class News {
 
@@ -13,7 +13,7 @@ public class News {
     private String mAuthor;
 
     /** Website URL of the book */
-    private String mUrl;
+    private String mSection;
 
     /** Date of the book */
     private String mDate;
@@ -24,14 +24,14 @@ public class News {
      * @param title is the book's title
      * @param author is the book's author
      * @param date is the book's date
-     * @param url is the website URL to find more details about the book
+     * @param section is the website URL to find more details about the book
      */
-    public News(String title, String author, String date, String url)
+    public News(String title, String author, String date, String section)
     {
         mTitle = title;
         mAuthor = author;
         mDate = date;
-        mUrl = url;
+        mSection = section;
     }
 
     // Returns the book's title
@@ -48,6 +48,6 @@ public class News {
     }
 
     // Returns the website URL to find more information about the book.
-    public String getUrl() { return mUrl; }
+    public String getSection() { return mSection; }
 
 }

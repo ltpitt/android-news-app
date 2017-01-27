@@ -95,7 +95,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
         bookDateTextView.setText(currentBookDate);
 
         // Get the current book url
-        String currentBookUrl = currentNews.getUrl();
+        String currentBookUrl = currentNews.getSection();
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;

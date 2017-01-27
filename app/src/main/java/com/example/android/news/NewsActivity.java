@@ -29,7 +29,7 @@ public class NewsActivity extends AppCompatActivity
      * URL for book data from the Google Books API
      */
     private static final String GOOGLE_BOOKS_REQUEST_URL =
-            "https://www.googleapis.com/books/v1/volumes?q=intitle:";
+            "http://content.guardianapis.com/search?api-key=test&q=";
 
     private String searchText;
 
@@ -37,7 +37,7 @@ public class NewsActivity extends AppCompatActivity
      * Constant value for the book loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
      */
-    private static final int BOOK_LOADER_ID = 1;
+    private static final int NEWS_LOADER_ID = 1;
 
     /**
      * Adapter for the list of books
@@ -69,7 +69,7 @@ public class NewsActivity extends AppCompatActivity
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(BOOK_LOADER_ID, null, this);
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
         } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
@@ -113,7 +113,7 @@ public class NewsActivity extends AppCompatActivity
                 News currentNews = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri bookUri = Uri.parse(currentNews.getUrl());
+                Uri bookUri = Uri.parse(currentNews.getSection());
 
                 // Create a new intent to view the book URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, bookUri);
